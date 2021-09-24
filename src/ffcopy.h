@@ -24,9 +24,9 @@
 #define HUNK_MAX INT_MAX
 #define MAX_PATH 2048
 
-int ffcopy() {
-	char ifpath[MAX_PATH+1]; /* name of input file */
-	char ofpath[MAX_PATH+1]; /* name of output file */
+void ffcopy(char * ifpath, char * ofpath) { /* NOTE: was previously an int function, and had no args */
+	/* char ifpath[MAX_PATH+1]; */ /* name of input file */
+	/* char ofpath[MAX_PATH+1]; */ /* name of output file */
 	char scanf_string[10]; /* argument string for scanf */
 
 	struct stat ifstat;
@@ -35,9 +35,8 @@ int ffcopy() {
 	size_t hunk; /*num of bytes to transfer in one piece */
 	size_t left; /*num of bytes left left to transfer */
 
-
 	/* Build the string "%2048s" */
-	(void)sprintf(scanf_string, "%%%ds", MAX_PATH);
+	(void)sprintf(scanf_string, "%%%ds", MAX_PATH); /* NOTE: Do I need to change MAX_PATH here? */
 
 	/* Get the input path */
 	(void)printf("Input file: ");
@@ -79,6 +78,7 @@ int ffcopy() {
 		if(write(ofdes,bigbuf,hunk) != hunk) {
 			(void)fprintf(stderr, " Error writing file %s\n", ofpath);
 			exit(EXIT_FAILURE);
+
 		}
 
 		left -= hunk; /* double check this for syntax error! */
@@ -94,7 +94,7 @@ int ffcopy() {
 
 	(void)printf("%s copied to %s (%d bytes)\n", ifpath,ofpath,ifstat.st_size); */
 
-	return(0);
+	return();
 
 }
 
