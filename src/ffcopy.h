@@ -1,9 +1,3 @@
-/******************************************************************************
- * TODO: 
- * -Rewrite ffcopy() to support argc and argv
- * -use memset() to clear variables before usage and after usage for security.
- *****************************************************************************/
-
 #ifndef _FFCOPY_H_
 #define _FFCOPY_H_
 
@@ -19,6 +13,8 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <string.h>
+
 #include "panic.h"	/* define the PANIC macro */
 
 #define HUNK_MAX INT_MAX
@@ -34,6 +30,11 @@ void ffcopy(char * ifpath, char * ofpath) { /* NOTE: was previously an int funct
 	int ifdes,ofdes; /* input/output file descriptors */
 	size_t hunk; /*num of bytes to transfer in one piece */
 	size_t left; /*num of bytes left left to transfer */
+
+	/* initially wipe variables for security */
+	memset(scanf_string, '\0', sizeof(scanf_string));
+	ifdes = 0;
+	ofdes= 0;
 
 	/* Build the string "%2048s" */
 	(void)sprintf(scanf_string, "%%%ds", MAX_PATH); /* NOTE: Do I need to change MAX_PATH here? */
@@ -89,15 +90,17 @@ void ffcopy(char * ifpath, char * ofpath) { /* NOTE: was previously an int funct
 	if (close(ifdes) != 0) PANIC;
 	if (close(ofdes) != 0) PANIC;
 
+	/* wipe variables after use */
+	memset(scanf_string, '\0', sizeof(scanf_string));
+	ifdes = 0;
+	ofdes = 0;
+
 	/* This code intentionally commented out. Intended to print
 	 * status message.
 
 	(void)printf("%s copied to %s (%d bytes)\n", ifpath,ofpath,ifstat.st_size); */
 
 	return();
-
 }
-
-
 
 #endif
